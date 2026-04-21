@@ -15,6 +15,8 @@ GITHUB_DEVICES_URL="https://github.com/JLRP09102005/Eveng-basic-setup-projects/r
 ## GLOBAL VARIABLES
 root_privileges="0"
 
+#====== MAIN SCRIPT ======
+
 #Check user privileges
 if [ "$EUID" -eq 0 ] 2>/dev/null || [ "$(id -u 2>/dev/null)" -eq 0 ]; then root_privileges=1; fi
 [ "$root_privileges" -ne 0 ] && { echo "ERROR: This script needs root privileges"; exit 1; }
