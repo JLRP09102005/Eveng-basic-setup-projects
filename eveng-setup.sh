@@ -18,17 +18,21 @@ root_privileges="0"
 #====== MAIN SCRIPT ======
 
 #Check user privileges
-if [ "$EUID" -eq 0 ] 2>/dev/null || [ "$(id -u 2>/dev/null)" -eq 0 ]; then root_privileges=1; fi
+if [ "$EUID" -eq 0 ] 2>/dev/null || [ "$(id -u 2>/dev/null)" -eq 0 ] 2>/dev/null; then root_privileges=1; fi
 [ "$root_privileges" -ne 0 ] && { echo "ERROR: This script needs root privileges"; exit 1; }
 
 #Check software
-git --version &>/dev/null
+git --version &>/dev/null || sudo apt install git
+python3 --version &>/dev/null || sudo apt install python3
 
 #Git clone or pull of the devices release
 git clone "$GITHUB_DEVICES_URL" "$DEVICES_DIR" 2>>"$LOG_FILE" || git -C "$DEVICES_DIR" pull 2>>"$LOG_FILE"
 
 #Move the Cisco License Generator to the base directory
 cp "${BASE_DIR}/python3/CiscoIOUKeygen3f.py" "/opt/unetlab/addons/iol/bin/"
+
+#Execute Cisco License python script to generate iourc file
+
 
 #Create symbolic link
 ln -sf "/opt/unetlab/addons/iol/bin/iourc" "/root/.iourc" 2>>"$LOG_FILE"
