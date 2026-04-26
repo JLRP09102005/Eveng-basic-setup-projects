@@ -42,7 +42,7 @@ git clone "$GITHUB_DEVICES_URL" "$DEVICES_DIR" 2>>"$LOG_FILE" || git -C "$DEVICE
 cp "${BASE_DIR}/python3/CiscoIOUKeygen3f.py" "/opt/unetlab/addons/iol/bin/"
 
 #Execute Cisco License python script to generate iourc file
-python3 "${BASE_DIR}/python3/CiscoIOUKeygen3f.py"
+python3 "${BASE_DIR}/python3/CiscoIOUKeygen3f.py" &>/dev/null
 cp "${BASE_DIR}/iourc.txt" "/opt/unetlab/addons/iol/bin/iourc"
 chmod 644 /opt/unetlab/addons/iol/bin/iourc
 
