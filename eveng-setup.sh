@@ -25,6 +25,7 @@ SWITCHL3_LINK="https://github.com/JLRP09102005/Eveng-basic-setup-projects/releas
 root_privileges="0"
 
 #====== MAIN SCRIPT ======
+clear
 
 #Check user privileges
 if [ "$EUID" -eq 0 ] 2>/dev/null || [ "$(id -u 2>/dev/null)" -eq 0 ] 2>/dev/null; then root_privileges=1; fi
@@ -41,7 +42,7 @@ git clone "$GITHUB_DEVICES_URL" "$DEVICES_DIR" 2>>"$LOG_FILE" || git -C "$DEVICE
 cp "${BASE_DIR}/python3/CiscoIOUKeygen3f.py" "/opt/unetlab/addons/iol/bin/"
 
 #Execute Cisco License python script to generate iourc file
-python3 /opt/unetlab/addons/iol/bin/CiscoIOUKeygen3f.py
+python3 /opt/unetlab/addons/iol/bin/CiscoIOUKeygen3f.py > "iourc"
 chmod 644 /opt/unetlab/addons/iol/bin/iourc
 
 #Create symbolic link
@@ -61,11 +62,11 @@ apt-get update
 apt-get install -y libc6:i386 libgcc-s1:i386
 
 #Clone Cisco necessary devices images
-wget -0 "${QEMU_DIR}/asav-9-18-1/virtioa.qcow2" "$ASAV9181_LINK"
-wget -0 "${QEMU_DIR}/asav-9-8-3/virtioa.qcow2" "$ASAV983_LINK"
-wget -0 "${QEMU_DIR}/csr1000vng-universalk9.17.03.05/virtioa.qcow2" "$CSR1000_LINK"
-wget -P "$BIN_DIR" "$SWITCHL2_LINK"
-wget -P "$BIN_DIR" "$SWITCHL3_LINK"
+wget -nc -O "${QEMU_DIR}/asav-9-18-1/virtioa.qcow2" "$ASAV9181_LINK" 2>/dev/null
+wget -nc -O "${QEMU_DIR}/asav-9-8-3/virtioa.qcow2" "$ASAV983_LINK" 2>/dev/null
+wget -nc -O "${QEMU_DIR}/csr1000vng-universalk9.17.03.05/virtioa.qcow2" "$CSR1000_LINK" 2>/dev/null
+wget -nc -P "$BIN_DIR" "$SWITCHL2_LINK" 2>/dev/null
+wget -nc -P "$BIN_DIR" "$SWITCHL3_LINK" 2>/dev/null
 
 ##Fix permissions
 /opt/unetlab/wrappers/unl_wrapper -a fixpermissions
