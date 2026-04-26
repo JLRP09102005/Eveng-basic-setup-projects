@@ -7,9 +7,15 @@ BIN_DIR="/opt/unetlab/addons/iol/bin"
 
 LOG_DIR="${BASE_DIR}/logs"
 mkdir -p "$LOG_DIR"
-
 DEVICES_DIR="${BASE_DIR}/devices"
 mkdir -p "$DEVICES_DIR"
+
+ASAV9181_DIR="${QEMU_DIR}/asav-9-18-1"
+mkdir -p "$ASAV9181_DIR"
+ASAV983_DIR="${QEMU_DIR}/asav-9-8-3"
+mkdir -p "$ASAV983_DIR"
+CSR1000_DIR="${QEMU_DIR}/csr1000vng-universalk9.17.03.05"
+mkdir -p "$CSR1000_DIR"
 
 ## FILES DIR
 LOG_FILE="${LOG_DIR}/$(date "+%Y%m%d_%H%M%S").log"
@@ -67,9 +73,9 @@ else
 fi
 
 #Clone Cisco necessary devices images
-wget -nc -O "${QEMU_DIR}/asav-9-18-1/virtioa.qcow2" "$ASAV9181_LINK" 2>/dev/null
-wget -nc -O "${QEMU_DIR}/asav-9-8-3/virtioa.qcow2" "$ASAV983_LINK" 2>/dev/null
-wget -nc -O "${QEMU_DIR}/csr1000vng-universalk9.17.03.05/virtioa.qcow2" "$CSR1000_LINK" 2>/dev/null
+wget -nc -O "${ASAV9181_DIR}/virtioa.qcow2" "$ASAV9181_LINK" 2>/dev/null
+wget -nc -O "${ASAV983_DIR}/virtioa.qcow2" "$ASAV983_LINK" 2>/dev/null
+wget -nc -O "${CSR1000_DIR}/virtioa.qcow2" "$CSR1000_LINK" 2>/dev/null
 wget -nc -P "$BIN_DIR" "$SWITCHL2_LINK" 2>/dev/null
 wget -nc -P "$BIN_DIR" "$SWITCHL3_LINK" 2>/dev/null
 
