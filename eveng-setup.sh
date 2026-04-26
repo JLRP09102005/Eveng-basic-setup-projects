@@ -58,7 +58,7 @@ chmod 777 /tmp/netio0
 echo 'd /tmp/netio0 0777 root root -' > /etc/tmpfiles.d/netio0.conf
 
 #Binary permissions por IOL
-if ! dpkg --print-foreign-architectures | grep "i386"; then
+if ! dpkg --print-foreign-architectures | grep -q "i386"; then
     dpkg --add-architecture i386
     apt-get update
     apt-get install -y libc6:i386 libgcc-s1:i386
