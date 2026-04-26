@@ -61,6 +61,8 @@ if ! dpkg --print-foreign-architectures | grep "i386"; then
     dpkg --add-architecture i386
     apt-get update
     apt-get install -y libc6:i386 libgcc-s1:i386
+else
+    echo "Paquete de arquitectura i386 ya instalado"
 fi
 
 #Clone Cisco necessary devices images
