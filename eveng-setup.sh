@@ -57,9 +57,11 @@ chmod 777 /tmp/netio0
 echo 'd /tmp/netio0 0777 root root -' > /etc/tmpfiles.d/netio0.conf
 
 #Binary permissions por IOL
-dpkg --add-architecture i386
-apt-get update
-apt-get install -y libc6:i386 libgcc-s1:i386
+if ! dpkg --print-foreign-architectures | grep "i386"; then
+    dpkg --add-architecture i386
+    apt-get update
+    apt-get install -y libc6:i386 libgcc-s1:i386
+fi
 
 #Clone Cisco necessary devices images
 wget -nc -O "${QEMU_DIR}/asav-9-18-1/virtioa.qcow2" "$ASAV9181_LINK" 2>/dev/null
@@ -68,5 +70,5 @@ wget -nc -O "${QEMU_DIR}/csr1000vng-universalk9.17.03.05/virtioa.qcow2" "$CSR100
 wget -nc -P "$BIN_DIR" "$SWITCHL2_LINK" 2>/dev/null
 wget -nc -P "$BIN_DIR" "$SWITCHL3_LINK" 2>/dev/null
 
-##Fix permissions
+#Fix permissions
 /opt/unetlab/wrappers/unl_wrapper -a fixpermissions
