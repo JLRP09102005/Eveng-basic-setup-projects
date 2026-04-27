@@ -30,18 +30,27 @@ SWITCHL3_LINK="https://github.com/JLRP09102005/Eveng-basic-setup-projects/releas
 ## GLOBAL VARIABLES
 root_privileges="0"
 
+## Colors
+RED='\033[0;31m'; GREEN='\033[0;32m'; YELLOW='\033[1;33m'
+CYAN='\033[0;36m'; NC='\033[0m'
+
 #====== MAIN SCRIPT ======
 clear
 
 #Check user privileges
+printf "%b\n" "${CYAN}Checking root privileges...${NC}"
 if [ "$EUID" -eq 0 ] 2>/dev/null || [ "$(id -u 2>/dev/null)" -eq 0 ] 2>/dev/null; then root_privileges=1; fi
 [ "$root_privileges" -ne 1 ] && { echo "ERROR: This script needs root privileges"; exit 1; }
+printf "%b\n" "${GREEN}root privileges correct${NC}"
 
 #Check software
+printf "%b\n" "${CYAN}Checking third party software dependences"
 git --version &>/dev/null || sudo apt install git
 python3 --version &>/dev/null || sudo apt install python3
+printf "%b\n" "${GREEN}Third party softwares installed${NC}"
 
 #Git clone or pull of the devices release
+printf "%b\n" "${CYAN}Cloning/Updating eve-ng basic setup repository${NC}"
 git clone "$GITHUB_DEVICES_URL" "$DEVICES_DIR" 2>>"$LOG_FILE" || git -C "$DEVICES_DIR" pull 2>>"$LOG_FILE"
 
 #Move the Cisco License Generator to the base directory
