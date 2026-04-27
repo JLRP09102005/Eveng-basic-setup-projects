@@ -45,8 +45,8 @@ printf "%b\n" "${GREEN}root privileges correct${NC}"
 
 #Check software
 printf "%b\n" "${CYAN}Checking third party software dependences"
-git --version &>/dev/null || sudo apt install git && printf "%b\n" "${GREEN}Third party softwares installed${NC}"
-python3 --version &>/dev/null || sudo apt install python3 && printf "%b\n" "${GREEN}Third party softwares installed${NC}"
+git --version &>/dev/null || sudo apt install git && printf "%b\n" "${GREEN}Third party software installed${NC}"
+python3 --version &>/dev/null || sudo apt install python3 && printf "%b\n" "${GREEN}Third party software installed${NC}"
 
 #Git clone or pull of the devices release
 printf "%b\n" "${CYAN}Cloning/Updating eve-ng basic setup repository${NC}"
@@ -54,7 +54,7 @@ git clone "$GITHUB_DEVICES_URL" "$DEVICES_DIR" 2>>"$LOG_FILE" || git -C "$DEVICE
 
 #Move the Cisco License Generator to the base directory
 printf "%b\n" "${CYAN}Move the Cisco License python script to the binary directory${NC}"
-cp "${BASE_DIR}/python3/CiscoIOUKeygen3f.py" "/opt/unetlab/addons/iol/bin/" && printf "%b\n" "Sucessfully"
+cp "${BASE_DIR}/python3/CiscoIOUKeygen3f.py" "/opt/unetlab/addons/iol/bin/" && printf "%b\n" "${GREEN}Sucessfully${NC}"
 
 #Execute Cisco License python script to generate iourc file
 printf "%b\n" "${CYAN}Execution of Cisco License script with python software to generate iourc file${NC}"
@@ -66,10 +66,11 @@ chmod 644 /opt/unetlab/addons/iol/bin/iourc && printf "%b\n" "${GREEN}Succesfull
 
 #Create symbolic link
 printf "%b\n" "${CYAN}Creating symbolic links for iourc file${NC}"
-ln -sf "/opt/unetlab/addons/iol/bin/iourc" "/root/.iourc" 2>>"$LOG_FILE"
-ln -sf "/opt/unetlab/addons/iol/bin/iourc" "/opt/unetlab/wrappers/iourc" 2>>"$LOG_FILE"
+ln -sf "/opt/unetlab/addons/iol/bin/iourc" "/root/.iourc" 2>>"$LOG_FILE" && printf "%b\n" "${GREEN}Sucessfully${NC}"
+ln -sf "/opt/unetlab/addons/iol/bin/iourc" "/opt/unetlab/wrappers/iourc" 2>>"$LOG_FILE" && printf "%b\n" "${GREEN}Sucessfully${NC}"
 
 #Create netIO directory
+printf "%b\n" "${CYAN}Creating netIO directory and giving the necessary permissions${NC}"
 mkdir -p /tmp/netio0
 chmod 777 /tmp/netio0
 
@@ -78,19 +79,30 @@ echo 'd /tmp/netio0 0777 root root -' > /etc/tmpfiles.d/netio0.conf
 
 #Binary permissions por IOL
 if ! dpkg --print-foreign-architectures | grep -q "i386"; then
+    printf "%b\n" "${CYAN}Architecture i386 not found, preparing to install"
     dpkg --add-architecture i386
     apt-get update
-    apt-get install -y libc6:i386 libgcc-s1:i386
+    apt-get install -y libc6:i386 libgcc-s1:i386 && printf "%b\n" "${GREEN}Sucessfully${NC}"
 else
-    echo "Paquete de arquitectura i386 ya instalado"
+    printf "%b\n" "${GREEN}Paquete de arquitectura i386 ya instalado${NC}"
 fi
 
 #Clone Cisco necessary devices images
-wget -nc -O "${ASAV9181_DIR}/virtioa.qcow2" "$ASAV9181_LINK" 2>/dev/null
-wget -nc -O "${ASAV983_DIR}/virtioa.qcow2" "$ASAV983_LINK" 2>/dev/null
-wget -nc -O "${CSR1000_DIR}/virtioa.qcow2" "$CSR1000_LINK" 2>/dev/null
-wget -nc -P "$BIN_DIR" "$SWITCHL2_LINK" 2>/dev/null
-wget -nc -P "$BIN_DIR" "$SWITCHL3_LINK" 2>/dev/null
+printf "%b\n" "${CYAN}Downloading asav9-18-1 image${NC}"
+wget -nc -O "${ASAV9181_DIR}/virtioa.qcow2" "$ASAV9181_LINK" 2>/dev/null && printf "%b\n" "${GREEN}Sucessfully${NC}"
+
+printf "%b\n" "${CYAN}Downloading asav9-8-3 image${NC}"
+wget -nc -O "${ASAV983_DIR}/virtioa.qcow2" "$ASAV983_LINK" 2>/dev/null && printf "%b\n" "${GREEN}Sucessfully${NC}"
+
+printf "%b\n" "${CYAN}Downloading csr1000 image${NC}"
+wget -nc -O "${CSR1000_DIR}/virtioa.qcow2" "$CSR1000_LINK" 2>/dev/null && printf "%b\n" "${GREEN}Sucessfully${NC}"
+
+printf "%b\n" "${CYAN}Downloading switch-l2 binary${NC}"
+wget -nc -P "$BIN_DIR" "$SWITCHL2_LINK" 2>/dev/null && printf "%b\n" "${GREEN}Sucessfully${NC}"
+
+printf "%b\n" "${CYAN}Downloading switch-l3 binary${NC}"
+wget -nc -P "$BIN_DIR" "$SWITCHL3_LINK" 2>/dev/null && printf "%b\n" "${GREEN}Sucessfully${NC}"
 
 #Fix permissions
-/opt/unetlab/wrappers/unl_wrapper -a fixpermissions
+printf "%b\n" "${CYAN}Fixing eve-ng permissions${NC}"
+/opt/unetlab/wrappers/unl_wrapper -a fixpermissions && printf "%b\n" "${GREEN}Sucessfully${NC}"
