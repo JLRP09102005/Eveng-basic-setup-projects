@@ -45,23 +45,27 @@ printf "%b\n" "${GREEN}root privileges correct${NC}"
 
 #Check software
 printf "%b\n" "${CYAN}Checking third party software dependences"
-git --version &>/dev/null || sudo apt install git
-python3 --version &>/dev/null || sudo apt install python3
-printf "%b\n" "${GREEN}Third party softwares installed${NC}"
+git --version &>/dev/null || sudo apt install git && printf "%b\n" "${GREEN}Third party softwares installed${NC}"
+python3 --version &>/dev/null || sudo apt install python3 && printf "%b\n" "${GREEN}Third party softwares installed${NC}"
 
 #Git clone or pull of the devices release
 printf "%b\n" "${CYAN}Cloning/Updating eve-ng basic setup repository${NC}"
 git clone "$GITHUB_DEVICES_URL" "$DEVICES_DIR" 2>>"$LOG_FILE" || git -C "$DEVICES_DIR" pull 2>>"$LOG_FILE"
 
 #Move the Cisco License Generator to the base directory
-cp "${BASE_DIR}/python3/CiscoIOUKeygen3f.py" "/opt/unetlab/addons/iol/bin/"
+printf "%b\n" "${CYAN}Move the Cisco License python script to the binary directory${NC}"
+cp "${BASE_DIR}/python3/CiscoIOUKeygen3f.py" "/opt/unetlab/addons/iol/bin/" && printf "%b\n" "Sucessfully"
 
 #Execute Cisco License python script to generate iourc file
-python3 "${BASE_DIR}/python3/CiscoIOUKeygen3f.py" &>/dev/null
+printf "%b\n" "${CYAN}Execution of Cisco License script with python software to generate iourc file${NC}"
+python3 "${BASE_DIR}/python3/CiscoIOUKeygen3f.py" &>/dev/null && printf "%b\n" "${GREEN}Succesfully${NC}"
 cp "${BASE_DIR}/iourc.txt" "/opt/unetlab/addons/iol/bin/iourc"
-chmod 644 /opt/unetlab/addons/iol/bin/iourc
+
+printf "%b\n" "${CYAN}Giving iourc file necessary permissions${NC}"
+chmod 644 /opt/unetlab/addons/iol/bin/iourc && printf "%b\n" "${GREEN}Succesfully${NC}"
 
 #Create symbolic link
+printf "%b\n" "${CYAN}Creating symbolic links for iourc file${NC}"
 ln -sf "/opt/unetlab/addons/iol/bin/iourc" "/root/.iourc" 2>>"$LOG_FILE"
 ln -sf "/opt/unetlab/addons/iol/bin/iourc" "/opt/unetlab/wrappers/iourc" 2>>"$LOG_FILE"
 
